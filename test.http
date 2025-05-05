@@ -1,0 +1,15 @@
+###
+# @name Basic
+
+GET http://localhost:4004/odata/v4/catalog
+
+###
+# @name BasicQuery
+POST http://localhost:4004/odata/v4/catalog/Authors
+Content-Type: application/json
+
+{"name": "Authors to Deploy 1"}
+
+###
+# @name BasicDelete
+DELETE http://localhost:4004/odata/v4/catalog/Authors(10632152)
