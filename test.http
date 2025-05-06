@@ -1,7 +1,7 @@
 ###
 # @name Basic
 
-GET http://localhost:4004/odata/v4/catalog
+GET http://localhost:4004/odata/v4/catalog/Books
 
 ###
 # @name BasicQuery
@@ -12,4 +12,15 @@ Content-Type: application/json
 
 ###
 # @name BasicDelete
-DELETE http://localhost:4004/odata/v4/catalog/Authors(10632152)
+DELETE http://localhost:4004/odata/v4/catalog/Authors(5abb6095-3f6e-4953-bc47-42b4e30ed8d4)
+
+###
+# @name BasicOrder
+POST http://localhost:4004/odata/v4/catalog/Orders
+Content-Type: application/json;IEEE754Compatible=true
+
+{"book_ID": "201", "amount": 5}
+
+###
+# @name DeleteOrder
+DELETE http://localhost:4004/odata/v4/catalog/Orders(da6c2bac-03b8-4a69-93b0-eb4345bf4506)
