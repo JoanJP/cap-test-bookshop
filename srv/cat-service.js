@@ -1,29 +1,30 @@
-const cds = require("@sap/cds");
-module.exports = async function () {
-  const db = await cds.connect.to("db"); // connect to database service
-  const { Books } = db.entities; // get reflected definitions
+const { v4: uuidv4 } = require("uuid");
 
-  // Create order report
-  this.before("CREATE", "Orders", async (req) => {
-    const order = req.data;
-    if (!order.amount || order.amount <= 0)
-      return req.error(400, "Order at least 1 book!");
-    const trx = cds.transaction(req);
-    const affectedRows = await trx.run(
-      UPDATE(Books)
-        .set({ stock: { "-=": order.amount } })
-        .where({ stock: { ">=": order.amount }, /*and*/ ID: order.book_ID })
-    );
-    if (affectedRows === 0) req.error(409, "Stock is not available, sorry!");
-  });
+module.exports = (srv) => {
+  srv.on("submitOrder", async (req) => {
+    console.log(req.data);
+    const { book: bookID, amount } = req.data;
+    if (!bookID || !amount || amount <= 0) {
+      return req.error(400, `Invalid book ID or amount!`);
+    }
 
-  this.before("DELETE", "Orders", async (req) => {
-    const trx = cds.transaction(req);
-    const orderStock = await trx.run();
-  });
+    const { Orders, Books } = cds.entities("my.bookshop");
+    // from Books where bookID, select stock
+    const book = await SELECT.one.from(Books, bookID).columns("stock");
+    if (!book) return req.error(404, "Book not found!");
+    if (book.stock < amount) return req.error(409, `Only ${book.stock} left!`);
 
-  // Add some discount for overstocked books
-  this.after("READ", "Books", (each) => {
-    if (each.stock > 111) each.title += ` -- 11% discount!`;
+    // Insert order and get the ID
+    const orderID = uuidv4();
+    await INSERT.into(Orders).entries({
+      ID: orderID,
+    });
+
+    //Out
+    return {
+      orderID,
+      amount: amount,
+      message: `Order ${orderID} created for book ${bookID}!`,
+    };
   });
 };

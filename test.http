@@ -23,4 +23,14 @@ Content-Type: application/json;IEEE754Compatible=true
 
 ###
 # @name DeleteOrder
-DELETE http://localhost:4004/odata/v4/catalog/Orders(da6c2bac-03b8-4a69-93b0-eb4345bf4506)
+DELETE http://localhost:4004/odata/v4/catalog/Orders(aaf74810-f3c9-45af-a688-996be730472b)
+
+###
+# @name submitOrder
+POST http://localhost:4004/odata/v4/catalog/submitOrder
+Content-Type: application/json
+
+{
+    "book": "201",
+    "amount": 10
+}

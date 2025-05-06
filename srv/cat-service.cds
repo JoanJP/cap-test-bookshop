@@ -4,4 +4,11 @@ service CatalogService {
     entity Books @readonly   as projection on my.Books;
     entity Authors @readonly as projection on my.Authors;
     entity Orders            as projection on my.Orders;
+
+    //action <actionName>(input : <type>) returns{ <output> }
+    action submitOrder(book : Books : ID, amount : Integer) returns {
+        orderID                     : UUID;
+        stock                       : Integer;
+        message                     : String;
+    }
 }
