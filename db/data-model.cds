@@ -17,4 +17,5 @@ entity Authors : cuid {
 entity Orders : cuid {
     book   : Association to Books;
     amount : Integer;
+    status : String;
 }
